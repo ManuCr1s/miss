@@ -25,10 +25,11 @@ if(isset($_SESSION['success'])){
 <div class="wrapper">
   <!-- Content Wrapper. Contains page content -->
 </div>
-<div class="container">
+<div class="container" style="background-color: rgb(242, 242, 242); margin-top: 50px;">
+    <h3 class="text-white text-center" style="margin-top: 50px;"><strong>MISS PASCO 2025</strong></h3>
     <div class="row" style="margin-top: 50px;">
             <div class="col-md-8">
-                <h5 class="text-white text-center" style="margin-bottom: 50px;"><strong>INGRESE SUS DATOS DE VOTANTE</strong></h5>
+                <h5 class="text-white text-center" style="margin-bottom: 20px;"><strong>INGRESE SUS DATOS DE VOTANTE</strong></h5>
                 <form class="form-horizontal" id="uservoter">
                         <div class="form-group">
                             <label for="firstname" class="col-sm-6 control-label"><center>Dni</center></label>
@@ -36,30 +37,16 @@ if(isset($_SESSION['success'])){
                               <input type="text" class="form-control" id="dni" name="dni" required>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="firstname" class="col-sm-6 control-label"><center>Nombres</center></label>
-                            <div class="col-sm-6">
-                              <input type="text" class="form-control" id="firstname" name="firstname" required>
-                            </div>
+                           <div class="form-group">
+                            <div class="col-sm-12">
+                                <div  style="display: flex;justify-content:end;">
+                                   <a href="index.php" class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-close"></i> Volver al Inicio</a>
+                                  <button type="submit" class="btn btn-primary btn-flat" name="add"><i class="fa fa-save"></i> Registrar</button>
+                                </div>                            
+                              </div>
                         </div>
-                        <div class="form-group">
-                            <label for="lastname" class="col-sm-6 control-label"><center>Apellidos</center></label>
-
-                            <div class="col-sm-6">
-                              <input type="text" class="form-control" id="lastname" name="lastname" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="col-sm-6 control-label"><center>Contraseña</center></label>
-
-                            <div class="col-sm-6">
-                              <input type="password" class="form-control" id="password" name="password" required>
-                            </div>
-                        </div>
-
                         <div class="modal-footer">
-                            <a href="index.php" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-close"></i> Volver al Inicio</a>
-                            <button type="submit" class="btn btn-primary btn-flat" name="add"><i class="fa fa-save"></i> Guardar</button>
+                       
                         </div>
                         
                   </form>
@@ -71,44 +58,18 @@ if(isset($_SESSION['success'])){
                        <div class="card-body">
                 <div class="row">
                   <div class="col-md-12">
-                    <p class="text-center" style="margin-bottom: 50px;">
-                      <strong>ASI VAN LAS ELECCIONES</strong>
+                    <p class="text-center" style="margin-bottom: 20px;">
+                      <strong>CANTIDAD DE CONCURSANTE</strong>
                     </p>
 
                     <div class="progress-group">
-                      Add Products to Cart
-                      <span class="float-right"><b>160</b>/200</span>
+                      Miss Pasco
+                      <span class="float-right"><b>12</b>/12</span>
                       <div class="progress progress-sm">
                         <div class="progress-bar bg-primary" style="width: 80%"></div>
                       </div>
                     </div>
-                    <!-- /.progress-group -->
-
-                    <div class="progress-group">
-                      Complete Purchase
-                      <span class="float-right"><b>310</b>/400</span>
-                      <div class="progress progress-sm">
-                        <div class="progress-bar bg-danger" style="width: 75%"></div>
-                      </div>
-                    </div>
-
-                    <!-- /.progress-group -->
-                    <div class="progress-group">
-                      <span class="progress-text">Visit Premium Page</span>
-                      <span class="float-right"><b>480</b>/800</span>
-                      <div class="progress progress-sm">
-                        <div class="progress-bar bg-success" style="width: 60%"></div>
-                      </div>
-                    </div>
-
-                    <!-- /.progress-group -->
-                    <div class="progress-group">
-                      Send Inquiries
-                      <span class="float-right"><b>250</b>/500</span>
-                      <div class="progress progress-sm">
-                        <div class="progress-bar bg-warning" style="width: 50%"></div>
-                      </div>
-                    </div>
+                   
                     <!-- /.progress-group -->
                   </div>
                   <!-- /.col -->
