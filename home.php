@@ -57,6 +57,7 @@
 				    <?php
 				    	$sql = "SELECT * FROM votes WHERE voters_id = '".$voter['dni']."'";
 				    	$vquery = $conn->query($sql);
+						
 				    	if($vquery->num_rows > 0){
 				    		?>
 				    		<div class="text-center">

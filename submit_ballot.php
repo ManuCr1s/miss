@@ -31,7 +31,7 @@
 					}
 					else{
 						$candidate = $_POST[$position];
-						$sql_array[] = "INSERT INTO votes (voters_id, candidate_id, position_id) VALUES ('".$voter['id']."', '$candidate', '$pos_id')";
+						$sql_array[] = "INSERT INTO votes (voters_id, candidate_id, position_id) VALUES ('".$voter['dni']."', '$candidate', '$pos_id')";
 					}
 
 				}
