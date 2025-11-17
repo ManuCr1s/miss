@@ -101,12 +101,12 @@
 											$image = (!empty($crow['photo'])) ? 'images/'.$crow['photo'] : 'images/profile.jpg';
 											$candidate .= '
 												<li>
-													'.$input.'<img src="'.$image.'" height="700px" width="500px" class="clist"><span class="cname clist">'.$crow['firstname'].' '.$crow['lastname'].'</span>
+													'.$input.'<img src="'.$image.'" height="300px" width="250px" class="clist"><span class="cname clist">'.$crow['firstname'].' '.$crow['lastname'].'</span>
 												</li>
 											';
 										}
 
-										$instruct = ($row['max_vote'] > 1) ? 'You may select up to '.$row['max_vote'].' candidates' : 'Select only one candidate';
+										$instruct = ($row['max_vote'] > 1) ? 'Tu puedes selccionar solo una particpante ' : 'Select only one candidate';
 
 										echo '
 											<div class="row">
