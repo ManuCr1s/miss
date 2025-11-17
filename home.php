@@ -14,7 +14,7 @@
 	      		$parse = parse_ini_file('admin/config.ini', FALSE, INI_SCANNER_RAW);
     			$title = $parse['election_title'];
 	      	?>
-	      	<h1 class="page-header text-center title"><b><?php echo strtoupper($title); ?></b></h1>
+	      	<h1 class="page-header text-center title"><b>MISS PASCO 2025</b></h1>
 	        <div class="row">
 	        	<div class="col-sm-10 col-sm-offset-1">
 	        		<?php
@@ -60,8 +60,8 @@
 				    	if($vquery->num_rows > 0){
 				    		?>
 				    		<div class="text-center">
-					    		<h3>You have already voted for this election.</h3>
-					    		<a href="#view" data-toggle="modal" class="btn btn-flat btn-primary btn-lg">Las Candidatas son</a>
+					    		<h3>Al parecer ya tienes a tu candidata</h3>
+					    		<a href="#view" data-toggle="modal" class="btn btn-flat btn-primary btn-lg">Tu candidata es:</a>
 					    	</div>
 				    		<?php
 				    	}
