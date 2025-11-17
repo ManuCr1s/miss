@@ -3,10 +3,10 @@
 	include 'includes/conn.php';
 
 	if(isset($_POST['login'])){
-		$voter = $_POST['voter'];
+		$dni = $_POST['dni'];
 		$password = $_POST['password'];
 
-		$sql = "SELECT * FROM voters WHERE voters_id = '$voter'";
+		$sql = "SELECT * FROM voters WHERE dni = '$dni'";
 		$query = $conn->query($sql);
 
 		if($query->num_rows < 1){

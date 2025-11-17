@@ -1,25 +1,6 @@
 
 <?php 
 include 'includes/header.php'; 
-if(isset($_SESSION['error'])){
-    echo "
-        <div class='alert alert-danger alert-dismissible fade show' style='margin: 15px;'>
-            <button type='button' class='close' data-dismiss='alert'>&times;</button>
-            ".$_SESSION['error']."
-        </div>
-    ";
-    unset($_SESSION['error']);
-}
-
-if(isset($_SESSION['success'])){
-    echo "
-        <div class='alert alert-success alert-dismissible fade show' style='margin: 15px;'>
-            <button type='button' class='close' data-dismiss='alert'>&times;</button>
-            ".$_SESSION['success']."
-        </div>
-    ";
-    unset($_SESSION['success']);
-}
 ?>
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
@@ -82,11 +63,13 @@ if(isset($_SESSION['success'])){
 </div>
 <?php include 'includes/scripts.php'; ?>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(function(){
   $(document).on('submit', '#uservoter', function(e){
     e.preventDefault();
     var formData = new FormData(this); 
+  
     $.ajax({
           url: 'admin/voters_add.php', // archivo que procesa
           type: 'POST',
@@ -96,11 +79,85 @@ $(function(){
           dataType: 'json', // esperamos JSON de vuelta
           success: function(response){
               // muestra el mensaje en la página
-              if(response.status == 'success'){
-                  $('#responseMessage').html('<div class="alert alert-success">'+response.message+'</div>');
-                  $('#voterForm')[0].reset(); // limpia el formulario
-              } else {
-                  $('#responseMessage').html('<div class="alert alert-danger">'+response.message+'</div>');
+              if(response.status == '0'){
+                    Swal.fire({
+                      title: 'Error!',
+                      text: response.message,
+                      icon: 'error',
+                      confirmButtonText: 'Cool'
+                    })
+
+              } else if(response.status == '1') {
+                    Swal.fire({
+                        title: "Sus Datos son:",
+                       html: `
+                          <input id="swal-nombre" class="swal2-input" placeholder="Nombres" value="${response.apiresponse.first_name}">
+                          <input id="swal-apellidos" class="swal2-input" placeholder="Apellidos" value="${response.apiresponse.first_last_name} ${response.apiresponse.second_last_name}">
+                            <input style="display:none;"  id="swal-dni" value="${response.apiresponse.document_number}">
+                        `,
+                        focusConfirm: false,
+                        showCancelButton: true,
+                        allowOutsideClick: () => false, 
+                        allowEscapeKey: false,
+                        preConfirm: async (login) => {
+                              const nombre = document.getElementById("swal-nombre").value;
+                              const apellidos = document.getElementById("swal-apellidos").value;
+                              const dni = document.getElementById("swal-dni").value;
+                              if(!nombre || !apellidos){
+                                  Swal.showValidationMessage("Los campos no pueden estar vacíos");
+                                  return false; // evita que cierre el Swal
+                              }
+
+                              return { nombre, apellidos, dni };
+                      },
+                      allowOutsideClick: () => !Swal.isLoading()
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                           $.ajax({
+                                  url: 'admin/voters_user.php',
+                                  type: 'POST',
+                                  data: {
+                                      nombre: result.value.nombre,
+                                      apellidos: result.value.apellidos,
+                                      dni:result.value.dni,
+                                  },
+                                  dataType: 'json',
+                                  success: function(saveResp){
+                                      if(saveResp.status == 'success'){
+                                          Swal.fire({
+                                              icon: 'success',
+                                              title: 'Datos guardados!',
+                                              text: saveResp.message,
+                                              allowOutsideClick: false
+                                          }).then(() => {
+                                              location.reload();
+                                          });
+                                        } else {
+                                          Swal.fire({
+                                              icon: 'error',
+                                              title: 'Error al guardar!',
+                                              text: saveResp.message
+                                          });
+                                      }
+                                  },
+                                  error: function(xhr, status, error){
+                                      Swal.fire({
+                                          icon: 'error',
+                                          title: 'Error en la solicitud!',
+                                          text: error,
+                                          allowOutsideClick: false,
+                                      });
+                                  }
+                              });
+                          }
+                      });
+              }else{
+                    Swal.fire({
+                      title: 'Error!',
+                      text: response.message,
+                      icon: 'error',
+                      confirmButtonText: 'Cool'
+                    })
               }
           },
           error: function(xhr, status, error){

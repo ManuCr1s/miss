@@ -30,6 +30,15 @@
 <script src="../dist/js/adminlte.min.js"></script>
 <!-- Active Script -->
 <script>
+
+
+
+
+
+
+<script src="../dist/js/adminlte.min.js"></script>
+<!-- Active Script -->
+<script>
 $(function(){
 	/** add active class and stay opened when selected */
 	var url = window.location;
