@@ -7,7 +7,7 @@
 		$dni= $_POST['dni'];
 		$nombre = $_POST['nombre'];
 		$apellidos = $_POST['apellidos'];
-		$password = password_hash($_POST['dni'], PASSWORD_DEFAULT);
+		$password = password_hash(strtoupper($_POST['paterno']), PASSWORD_DEFAULT);
 
 		// generate voters id
 		$set = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -15,7 +15,7 @@
 		$sql = "INSERT INTO voters (voters_id,dni, password, firstname, lastname) VALUES ('$voter','$dni','$password', '$nombre', '$apellidos')";
 			if($conn->query($sql)){
 				$response['status'] = 'success';
-				$response['message'] = 'Su contraseña es su DNI';
+				$response['message'] = 'Su contraseña es su APELLIDO PATERNO EN MAYUSCULAS';
 			} else {
 				  $response['message'] = $conn->error;
 			}

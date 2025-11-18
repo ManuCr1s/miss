@@ -10,26 +10,20 @@
 		}else{
 			$key = $_POST['dni'];
 			/* $token = 'sk_8431.V90eyloQeOKiJJGJMikpimCfpKcd9jWD'; */
-			$token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1hbnVfbmNAb3V0bG9vay5jb20ifQ.6-luHiDdlxZIPx4xXo6iWZ3-cJJgMofxayEyxJm3sgw';
+			$token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzOTg4MiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6ImNvbnN1bHRvciJ9.LnnxT69Mll6bmJN0vcj-rntearWB4-dEo0vd_pvOppU';
 			$curl = curl_init();
-			curl_setopt_array($curl, array(
-				// para user api versión 2
-				/* CURLOPT_URL => 'https://api.decolecta.com/v1/reniec/dni?numero=' . $key, */
-				CURLOPT_URL => 'https://dniruc.apisperu.com/api/v1/dni/'.$dni.'?token='.$token,
-				// para user api versión 1
-				// CURLOPT_URL => 'https://api.apis.net.pe/v1/dni?numero=' . $dni,
+			curl_setopt_array($curl, [
+				CURLOPT_URL => "https://api.factiliza.com/v1/dni/info/".$key,
 				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_SSL_VERIFYPEER => 0,
-				CURLOPT_ENCODING => '',
-				CURLOPT_MAXREDIRS => 2,
-				CURLOPT_TIMEOUT => 0,
-				CURLOPT_FOLLOWLOCATION => true,
-				CURLOPT_CUSTOMREQUEST => 'GET',
-				CURLOPT_HTTPHEADER => array(
-				'Referer: https://dniruc.apisperu.com/api/v1/dni/',
-				'Authorization: Bearer ' . $token
-				),
-			));
+				CURLOPT_ENCODING => "",
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 30,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "GET",
+				CURLOPT_HTTPHEADER => [
+					"Authorization: Bearer $token"
+				],
+			]);
 			$apiresponse = curl_exec($curl);
 			curl_close($curl);
 			$apiresponse = json_decode($apiresponse, true);

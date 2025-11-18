@@ -88,13 +88,17 @@ $(function(){
                     })
 
               } else if(response.status == '1') {
-                    Swal.fire({
-                        title: "Sus Datos son:",
-                       html: `
-                          <input id="swal-nombre" class="swal2-input" placeholder="Nombres" value="${response.apiresponse.nombres}">
-                          <input id="swal-apellidos" class="swal2-input" placeholder="Apellidos" value="${response.apiresponse.apellidoPaterno} ${response.apiresponse.apellidoMaterno}">
-                            <input style="display:none;"  id="swal-dni" value="${response.apiresponse.dni}">
-                        `,
+                    if(response.apiresponse.status == '200'){
+                       Swal.fire({
+                        title: "Confirmacion:",
+                           html: `
+                                  <h5>¿Esta seguro que desea realizar su registro con este DNI?</h5>
+                                  <h3>${response.apiresponse.data.numero}</h3>
+                                  <input  style="display:none;"  id="swal-nombre" class="swal2-input" placeholder="Nombres" value="${response.apiresponse.data.nombres}">
+                                  <input  style="display:none;"  id="swal-paterno" class="swal2-input" placeholder="Nombres" value="${response.apiresponse.data.apellido_paterno}">
+                                  <input  style="display:none;"  id="swal-apellidos" class="swal2-input" placeholder="Apellidos" value="${response.apiresponse.data.apellido_paterno} ${response.apiresponse.data.apellido_materno}">
+                                    <input style="display:none;"  id="swal-dni" value="${response.apiresponse.data.numero}">
+                                `,
                         focusConfirm: false,
                         showCancelButton: true,
                         allowOutsideClick: () => false, 
@@ -102,13 +106,14 @@ $(function(){
                         preConfirm: async (login) => {
                               const nombre = document.getElementById("swal-nombre").value;
                               const apellidos = document.getElementById("swal-apellidos").value;
+                              const paterno = document.getElementById("swal-paterno").value;
                               const dni = document.getElementById("swal-dni").value;
-                              if(!nombre || !apellidos){
+                        /*       if(!nombre || !apellidos){
                                   Swal.showValidationMessage("Los campos no pueden estar vacíos");
                                   return false; // evita que cierre el Swal
-                              }
+                              } */
 
-                              return { nombre, apellidos, dni };
+                              return { nombre, apellidos, dni,paterno };
                       },
                       allowOutsideClick: () => !Swal.isLoading()
                         }).then((result) => {
@@ -120,6 +125,7 @@ $(function(){
                                       nombre: result.value.nombre,
                                       apellidos: result.value.apellidos,
                                       dni:result.value.dni,
+                                      paterno:result.value.paterno,
                                   },
                                   dataType: 'json',
                                   success: function(saveResp){
@@ -151,6 +157,15 @@ $(function(){
                               });
                           }
                       });
+                    }else{
+                           Swal.fire({
+                            title: 'Error!',
+                            text: 'Ingrese dni correcto',
+                            icon: 'error',
+                            confirmButtonText: 'Cool'
+                          })
+                    }
+           
               }else{
                     Swal.fire({
                       title: 'Error!',
