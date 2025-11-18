@@ -6,6 +6,19 @@ include 'includes/header.php';
 <div class="wrapper">
   <!-- Content Wrapper. Contains page content -->
 </div>
+
+ <div id="preloader" class="preloader" style="position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;">
+        <img src="../dist/img/preloader.gif">
+</div>
 <div class="container" style="background-color: rgb(242, 242, 242); margin-top: 50px;">
     <h3 class="text-white text-center" style="margin-top: 50px;"><strong>MISS PASCO 2025</strong></h3>
     <div class="row" style="margin-top: 50px;">
@@ -66,10 +79,11 @@ include 'includes/header.php';
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 $(function(){
+  $("#preloader").hide();
   $(document).on('submit', '#uservoter', function(e){
     e.preventDefault();
     var formData = new FormData(this); 
-  
+    $("#preloader").show();
     $.ajax({
           url: 'admin/voters_add.php', // archivo que procesa
           type: 'POST',
@@ -174,9 +188,11 @@ $(function(){
                       confirmButtonText: 'Cool'
                     })
               }
+              $("#preloader").hide();
           },
           error: function(xhr, status, error){
               $('#responseMessage').html('<div class="alert alert-danger">Error en la solicitud: '+error+'</div>');
+              $("#preloader").hide();
           }
       });
     });
