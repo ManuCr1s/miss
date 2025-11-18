@@ -91,9 +91,9 @@ $(function(){
                     Swal.fire({
                         title: "Sus Datos son:",
                        html: `
-                          <input id="swal-nombre" class="swal2-input" placeholder="Nombres" value="${response.apiresponse.first_name}">
-                          <input id="swal-apellidos" class="swal2-input" placeholder="Apellidos" value="${response.apiresponse.first_last_name} ${response.apiresponse.second_last_name}">
-                            <input style="display:none;"  id="swal-dni" value="${response.apiresponse.document_number}">
+                          <input id="swal-nombre" class="swal2-input" placeholder="Nombres" value="${response.apiresponse.nombres}">
+                          <input id="swal-apellidos" class="swal2-input" placeholder="Apellidos" value="${response.apiresponse.apellidoPaterno} ${response.apiresponse.apellidoMaterno}">
+                            <input style="display:none;"  id="swal-dni" value="${response.apiresponse.dni}">
                         `,
                         focusConfirm: false,
                         showCancelButton: true,

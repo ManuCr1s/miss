@@ -9,11 +9,13 @@
 			$response['message'] = 'El DNI ya está registrado.';
 		}else{
 			$key = $_POST['dni'];
-			$token = 'sk_8431.V90eyloQeOKiJJGJMikpimCfpKcd9jWD';
+			/* $token = 'sk_8431.V90eyloQeOKiJJGJMikpimCfpKcd9jWD'; */
+			$token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Im1hbnVfbmNAb3V0bG9vay5jb20ifQ.6-luHiDdlxZIPx4xXo6iWZ3-cJJgMofxayEyxJm3sgw';
 			$curl = curl_init();
 			curl_setopt_array($curl, array(
 				// para user api versión 2
-				CURLOPT_URL => 'https://api.decolecta.com/v1/reniec/dni?numero=' . $key,
+				/* CURLOPT_URL => 'https://api.decolecta.com/v1/reniec/dni?numero=' . $key, */
+				CURLOPT_URL => 'https://dniruc.apisperu.com/api/v1/dni/'.$dni.'?token='.$token,
 				// para user api versión 1
 				// CURLOPT_URL => 'https://api.apis.net.pe/v1/dni?numero=' . $dni,
 				CURLOPT_RETURNTRANSFER => true,
@@ -24,7 +26,7 @@
 				CURLOPT_FOLLOWLOCATION => true,
 				CURLOPT_CUSTOMREQUEST => 'GET',
 				CURLOPT_HTTPHEADER => array(
-				'Referer: https://apis.net.pe/consulta-dni-api',
+				'Referer: https://dniruc.apisperu.com/api/v1/dni/',
 				'Authorization: Bearer ' . $token
 				),
 			));
