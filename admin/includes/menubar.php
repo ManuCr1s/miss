@@ -16,6 +16,7 @@
       <li class="header">REPORTE</li>
       <li class=""><a href="home.php"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
       <li class=""><a href="votes.php"><span class="glyphicon glyphicon-lock"></span> <span>Votos</span></a></li>
+       <li class=""><a href="reporte.php"><i class="fa fa-file-text"></i> <span>Reporte</span></a></li>
       <li class="header">ADMINISTRACION</li>
       <li class=""><a href="voters.php"><i class="fa fa-users"></i> <span>Votantes</span></a></li>
       <li class=""><a href="positions.php"><i class="fa fa-tasks"></i> <span>Categoria</span></a></li>
