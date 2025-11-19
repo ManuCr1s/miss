@@ -1,6 +1,7 @@
 <?php include 'includes/session.php'; ?>
 <?php include 'includes/slugify.php'; ?>
 <?php include 'includes/header.php'; ?>
+
 <body class="hold-transition skin-blue sidebar-mini">
 <div class="wrapper">
 
@@ -127,14 +128,70 @@
         </div>
         <!-- ./col -->
       </div>
+              <div class="table-responsive">
+                <table class="table" id="candidate">
+                    <thead>
+                        <tr>  
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th># Votos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="2" style="text-align:right">TOTAL:</th>
+                            <th></th>
+                        </tr>
+                    </tfoot>
+                </table>
+        </div>
       </section>
       <!-- right col -->
     </div>
+
   	<?php include 'includes/footer.php'; ?>
 
 </div>
 <!-- ./wrapper -->
-
 <?php include 'includes/scripts.php'; ?>
+<script src="../plugins/datatables/datatables.min.js"></script>
+<script>
+  $(function(){
+    $('#candidate').DataTable( {
+         ajax: {
+                url: 'votes_show.php',
+                dataSrc: 'data'
+            },
+          columns: [  { data: 'nombre' },
+        { data: 'apellido' },
+        { data: 'cantidad' } ],
+        footerCallback: function (row, data, start, end, display) {
+            var api = this.api();
+
+            // Función para convertir a número
+            var intVal = function (i) {
+                return typeof i === 'string'
+                    ? i.replace(/[\$,]/g, '') * 1
+                    : typeof i === 'number'
+                    ? i
+                    : 0;
+            };
+
+            // Sumamos la columna 2 (cantidad)
+            var total = api
+                .column(2)
+                .data()
+                .reduce(function (a, b) {
+                    return intVal(a) + intVal(b);
+                }, 0);
+
+            // Mostrar total en el footer
+            $(api.column(2).footer()).html(total);
+        }
+    });
+});
+</script>
 </body>
 </html>

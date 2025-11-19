@@ -35,7 +35,7 @@
 
   	<!-- Google Font -->
   	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-
+<link href="../plugins/datatables/datatables.min.css" rel="stylesheet">
   	<style type="text/css">
       .bold{
         font-weight:bold;
