@@ -167,6 +167,7 @@
           columns: [  { data: 'nombre' },
         { data: 'apellido' },
         { data: 'cantidad' } ],
+         pageLength: -1,  
         footerCallback: function (row, data, start, end, display) {
             var api = this.api();
 
