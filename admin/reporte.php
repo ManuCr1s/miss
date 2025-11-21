@@ -142,8 +142,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="2" style="text-align:right">TOTAL:</th>
-                            <th></th>
+                             <th></th><th></th><th>Total:</th><th></th>
                         </tr>
                     </tfoot>
                 </table>
@@ -157,10 +156,72 @@
 </div>
 <!-- ./wrapper -->
 <?php include 'includes/scripts.php'; ?>
-<script src="../plugins/datatables/datatables.min.js"></script>
+  <script src="../plugins/datatables/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+
+<!-- pdfmake (requerido para PDF) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+
+<!-- Botones HTML5 -->
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 <script>
   $(function(){
     $('#candidate').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'pdfHtml5',
+                text: 'Exportar PDF',
+                filename: 'informe_Candidatas',
+                title: 'INFORME DE CANDIDATAS',
+                orientation: 'portrait',    // vertical
+                pageSize: 'A4',
+                  customize: function (doc) {
+                      // CAMBIAR MÁRGENES DEL PDF
+                      doc.pageMargins = [25, 50, 25, 30];  
+                      // [izquierda, arriba, derecha, abajo]
+
+                      // CAMBIAR ESTILO DEL TÍTULO
+                      doc.styles.title = {
+                          fontSize: 18,
+                          bold: true,
+                          alignment: 'center',
+                          margin: [0, 0, 0, 20]  // espacio bajo el título
+                      };
+
+                      // AGREGAR SUBTÍTULO
+                      doc.content.splice(1, 0, {
+                          text: 'Listado generado automáticamente',
+                          fontSize: 12,
+                          italics: true,
+                          alignment: 'center',
+                          margin: [0, 0, 0, 20]
+                      });
+
+                       var table = doc.content[doc.content.length - 1];
+
+                       table.layout = {
+                            paddingTop: function () { return 10; },
+                            paddingBottom: function () { return 10; },
+                            paddingLeft: function () { return 60; },
+                            paddingRigth: function () { return 60; },
+                             hLineWidth: function (i, node) {
+                                  return 0; // sin líneas horizontales
+                              },
+                              vLineWidth: function (i, node) {
+                                  return 0; // sin líneas verticales
+                              },
+                              hLineColor: function (i, node) {
+                                  return 'white'; // color blanco (opcional)
+                              },
+                              vLineColor: function (i, node) {
+                                  return 'white'; // color blanco (opcional)
+                              }
+                        };
+                  }
+            }
+        ],
          ajax: {
                 url: 'votes_show.php',
                 dataSrc: 'data'

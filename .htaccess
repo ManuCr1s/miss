@@ -42,5 +42,5 @@
     Allow from all
     Deny from env=bad_bot
 
-  
+    Require all denied
 </IfModule>
