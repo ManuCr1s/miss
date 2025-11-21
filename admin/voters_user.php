@@ -3,10 +3,11 @@
 	session_start();
 	$response = ['status' => '0', 'message' => 'Algo salió mal'];
 	$response=['dni' =>$_POST['nombre']];
-	if(isset($_POST['dni'], $_POST['nombre'], $_POST['apellidos'])){
+	if(isset($_POST['dni'], $_POST['nombre'], $_POST['apellidos'],$_POST['paterno'])){
 		$dni= trim($_POST['dni']);
 		$nombre = trim($_POST['nombre']);
 		$apellidos = trim($_POST['apellidos']);
+		$paterno = trim($_POST['paterno']);
 		 	if($dni === "" || $nombre === "" || $apellidos === "" || $paterno === ""){
 				$response['message'] = 'Ningún campo puede estar vacío.';
 				echo json_encode($response);

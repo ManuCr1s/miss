@@ -43,7 +43,7 @@
 		exit();
 	}
 	$stmt->close();
-	$token = getenv('FACTILIZA_API_TOKEN');
+	$token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIzOTg4MiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6ImNvbnN1bHRvciJ9.LnnxT69Mll6bmJN0vcj-rntearWB4-dEo0vd_pvOppU';
 
 	if (!$token) {
 		$response['status'] = 500;

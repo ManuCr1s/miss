@@ -12,7 +12,7 @@
 	      <section class="content">
 	      	<?php
 	      		$parse = parse_ini_file('admin/config.ini', FALSE, INI_SCANNER_RAW);
-    			$title = $parse['election_title'];
+    			$title = isset($parse['election_title']) ? htmlspecialchars($parse['election_title']) : 'MISS PASCO 2025';
 	      	?>
 	      	<h1 class="page-header text-center title"><b>MISS PASCO 2025</b></h1>
 	        <div class="row">
@@ -55,76 +55,89 @@
 			        </div>
 
 				    <?php
-				    	$sql = "SELECT * FROM votes WHERE voters_id = '".$voter['dni']."'";
-				    	$vquery = $conn->query($sql);
-						
-				    	if($vquery->num_rows > 0){
-				    		?>
-				    		<div class="text-center">
-					    		<h3>Al parecer ya tienes a tu candidata</h3>
-					    		<a href="#view" data-toggle="modal" class="btn btn-flat btn-primary btn-lg">Tu candidata es:</a>
-					    	</div>
-				    		<?php
-				    	}
-				    	else{
-				    		?>
-			    			<!-- Voting Ballot -->
-						    <form method="POST" id="ballotForm" action="submit_ballot.php">
-				        		<?php
-				        			include 'includes/slugify.php';
-
-				        			$candidate = '';
-				        			$sql = "SELECT * FROM positions ORDER BY priority ASC";
+						$voter_dni = isset($voter['dni']) ? $conn->real_escape_string($voter['dni']) : null;
+						if($voter_dni){
+							$stmt = $conn->prepare("SELECT * FROM votes WHERE voters_id = ?");
+							$stmt->bind_param("s", $voter_dni);
+							$stmt->execute();
+							$vquery = $stmt->get_result();
+							if($vquery->num_rows > 0){?>
+									<div class="text-center">
+										<h3>Al parecer ya tienes a tu candidata</h3>
+										<a href="#view" data-toggle="modal" class="btn btn-flat btn-primary btn-lg">Tu candidata es:</a>
+									</div>
+									<?php
+							}else{?>
+								<form method="POST" id="ballotForm" action="submit_ballot.php" novalidate>
+									<?php
+									include 'includes/slugify.php';
+									$sql = "SELECT * FROM positions ORDER BY priority ASC";
 									$query = $conn->query($sql);
-									while($row = $query->fetch_assoc()){
-										$sql = "SELECT * FROM candidates WHERE position_id='".$row['id']."'";
-										$cquery = $conn->query($sql);
-										while($crow = $cquery->fetch_assoc()){
-											$slug = slugify($row['description']);
-											$checked = '';
-											if(isset($_SESSION['post'][$slug])){
-												$value = $_SESSION['post'][$slug];
+									while ($row = $query->fetch_assoc()) {
+										$position_id = (int)$row['id'];
+										$slug = slugify($row['description']);
+										$max_vote = (int)$row['max_vote'];
+										
+										// Obtener candidatos con consulta preparada
+										$cstmt = $conn->prepare("SELECT * FROM candidates WHERE position_id = ?");
+										$cstmt->bind_param("i", $position_id);
+										$cstmt->execute();
+										$cquery = $cstmt->get_result();
 
-												if(is_array($value)){
-													foreach($value as $val){
-														if($val == $crow['id']){
-															$checked = 'checked';
-														}
-													}
-												}
-												else{
-													if($value == $crow['id']){
-														$checked = 'checked';
-													}
+										$candidate = '';
+										while ($crow = $cquery->fetch_assoc()) {
+											$candidate_id = (int)$crow['id'];
+											$checked = '';
+											if (isset($_SESSION['post'][$slug])) {
+												$value = $_SESSION['post'][$slug];
+												if (is_array($value) && in_array($candidate_id, $value)) {
+													$checked = 'checked';
+												} elseif ($value == $candidate_id) {
+													$checked = 'checked';
 												}
 											}
-											$input = ($row['max_vote'] > 1) ? '<input type="checkbox" class="flat-red '.$slug.'" name="'.$slug."[]".'" value="'.$crow['id'].'" '.$checked.'>' : '<input type="radio" class="flat-red '.$slug.'" name="'.slugify($row['description']).'" value="'.$crow['id'].'" '.$checked.'>';
-											$image = (!empty($crow['photo'])) ? 'images/'.$crow['photo'] : 'images/profile.jpg';
-											$candidate .= '
-												<li>
-													'.$input.'<img src="'.$image.'" height="300px" width="250px" class="clist"><span class="cname clist">'.$crow['firstname'].' '.$crow['lastname'].'</span>
-												</li>
-											';
+
+											$input_name = $max_vote > 1 ? $slug . "[]" : $slug;
+											$input_type = $max_vote > 1 ? 'checkbox' : 'radio';
+											$image = !empty($crow['photo']) ? 'images/' . htmlspecialchars($crow['photo']) : 'images/profile.jpg';
+
+											$candidate .= sprintf(
+												'<li>
+													<input type="%s" class="flat-red %s" name="%s" value="%d" %s>
+													<img src="%s" height="300px" width="250px" class="clist" alt="Foto de %s %s">
+													<span class="cname clist">%s %s</span>
+												</li>',
+												$input_type,
+												htmlspecialchars($slug),
+												htmlspecialchars($input_name),
+												$candidate_id,
+												$checked,
+												htmlspecialchars($image),
+												htmlspecialchars($crow['firstname']),
+												htmlspecialchars($crow['lastname']),
+												htmlspecialchars($crow['firstname']),
+												htmlspecialchars($crow['lastname'])
+											);
 										}
-
-										$instruct = ($row['max_vote'] > 1) ? 'Tu puedes selccionar solo una particpante ' : 'Select only one candidate';
-
+										$instruct = $max_vote > 1 ? 'Puedes seleccionar solo una participante' : 'Select only one candidate';
 										echo '
 											<div class="row">
 												<div class="col-xs-12">
-													<div class="box box-solid" id="'.$row['id'].'">
+													<div class="box box-solid" id="' . $position_id . '">
 														<div class="box-header with-border">
-															<h3 class="box-title"><b>'.$row['description'].'</b></h3>
+															<h3 class="box-title"><b>' . htmlspecialchars($row['description']) . '</b></h3>
 														</div>
 														<div class="box-body">
-															<p>'.$instruct.'
+															<p>' . $instruct . '
 																<span class="pull-right">
-																	<button type="button" class="btn btn-success btn-sm btn-flat reset" data-desc="'.slugify($row['description']).'"><i class="fa fa-refresh"></i> Reset</button>
+																	<button type="button" class="btn btn-success btn-sm btn-flat reset" data-desc="' . htmlspecialchars($slug) . '">
+																		<i class="fa fa-refresh"></i> Reset
+																	</button>
 																</span>
 															</p>
 															<div id="candidate_list">
 																<ul>
-																	'.$candidate.'
+																	' . $candidate . '
 																</ul>
 															</div>
 														</div>
@@ -132,23 +145,24 @@
 												</div>
 											</div>
 										';
-
-										$candidate = '';
-
-									}	
-
-				        		?>
-				        		<div class="text-center">
-					        		<button type="button" class="btn btn-success btn-flat" id="preview"><i class="fa fa-file-text"></i> Preview</button> 
-					        		<button type="submit" class="btn btn-primary btn-flat" name="vote"><i class="fa fa-check-square-o"></i> Submit</button>
-					        	</div>
-				        	</form>
-				        	<!-- End Voting Ballot -->
-				    		<?php
-				    	}
-
-				    ?>
-
+									}
+									?>
+										<div class="text-center">
+										<button type="button" class="btn btn-success btn-flat" id="preview">
+											<i class="fa fa-file-text"></i> Preview
+										</button> 
+										<button type="submit" class="btn btn-primary btn-flat" name="vote">
+											<i class="fa fa-check-square-o"></i> Submit
+										</button>
+									</div>
+								</form>
+								<?php
+							}
+							$stmt->close();
+						}else {
+							echo '<div class="alert alert-warning">No se ha identificado correctamente al votante.</div>';
+						}
+						?>
 	        	</div>
 	        </div>
 	      </section>
