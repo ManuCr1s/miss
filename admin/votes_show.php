@@ -1,7 +1,7 @@
 <?php
 	include 'includes/session.php';
     try {
-        $sql = "SELECT DISTINCT  ca.firstname as nombre,ca.lastname as apellido,count(vo.candidate_id) as cantidad FROM candidates ca INNER JOIN votes vo ON vo.candidate_id = ca.id GROUP BY ca.firstname,ca.lastname";
+       $sql = "WITH ranking AS (SELECT ca.id,ca.firstname AS nombre,ca.lastname AS apellido, COUNT(vo.candidate_id) AS cantidad FROM candidates ca LEFT JOIN votes vo ON vo.candidate_id = ca.id GROUP BY ca.id),maximo AS ( SELECT MAX(cantidad) AS max_votos FROM ranking) SELECT r.nombre, r.apellido, r.cantidad, ROUND((r.cantidad / m.max_votos) * 10, 0) AS puntos FROM ranking r CROSS JOIN maximo m ORDER BY puntos DESC";
 		$query = $conn->query($sql);
 		$data  = [];
         while ($row = $query->fetch_assoc()) {

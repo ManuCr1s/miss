@@ -135,6 +135,7 @@
                             <th>Nombres</th>
                             <th>Apellidos</th>
                             <th># Votos</th>
+                            <th>Puntos</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -166,7 +167,8 @@
             },
           columns: [  { data: 'nombre' },
         { data: 'apellido' },
-        { data: 'cantidad' } ],
+        { data: 'cantidad' },
+        { data: 'puntos' }],
          pageLength: -1,  
         footerCallback: function (row, data, start, end, display) {
             var api = this.api();
