@@ -1,32 +1,48 @@
 <?php
 	session_start();
 	include 'includes/conn.php';
+	if (isset($_POST['login'])) {
+    // Saneamiento básico de entrada
+    $dni = trim($_POST['dni'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-	if(isset($_POST['login'])){
-		$dni = $_POST['dni'];
-		$password = $_POST['password'];
+    if (empty($dni) || empty($password)) {
+        $_SESSION['error'] = 'Ingrese credenciales válidas';
+        header('Location: index.php');
+        exit();
+    }
 
-		$sql = "SELECT * FROM voters WHERE dni = '$dni'";
-		$query = $conn->query($sql);
+    // Consulta preparada para evitar SQL injection
+    $stmt = $conn->prepare("SELECT dni, password FROM voters WHERE dni = ?");
+    if (!$stmt) {
+        $_SESSION['error'] = 'Error en el servidor';
+        header('Location: index.php');
+        exit();
+    }
 
-		if($query->num_rows < 1){
-			$_SESSION['error'] = 'Cannot find voter with the ID';
-		}
-		else{
-			$row = $query->fetch_assoc();
-			if(password_verify($password, $row['password'])){
-				$_SESSION['voter'] = $row['dni'];
-			}
-			else{
-				$_SESSION['error'] = 'Incorrect password';
-			}
-		}
-		
-	}
-	else{
-		$_SESSION['error'] = 'Input voter credentials first';
-	}
+    $stmt->bind_param("s", $dni);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-	header('location: index.php');
+    if ($result->num_rows === 0) {
+        // Mensaje genérico para no revelar existencia del votante
+        $_SESSION['error'] = 'Credenciales incorrectas';
+    } else {
+        $row = $result->fetch_assoc();
+        if (password_verify($password, $row['password'])) {
+            // Inicio de sesión seguro
+            session_regenerate_id(true);
+            $_SESSION['voter'] = $row['dni'];
+        } else {
+            $_SESSION['error'] = 'Credenciales incorrectas';
+        }
+    }
 
-?>
+    $stmt->close();
+    header('Location: index.php');
+    exit();
+} else {
+    $_SESSION['error'] = 'Por favor ingrese las credenciales';
+    header('Location: index.php');
+    exit();
+}
