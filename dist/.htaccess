@@ -1,0 +1,23 @@
+#############################################
+# BLOQUEAR ACCESO COMPLETO A ESTA CARPETA
+#############################################
+
+# Deshabilitar ejecución de PHP en esta carpeta
+php_flag engine off
+
+# Bloquear archivos PHP subidos
+<FilesMatch "\.(php|php5|php7|php8|phtml)$">
+    Deny from all
+</FilesMatch>
+
+# Evitar archivos ocultos tipo .htaccess, .git, etc.
+<FilesMatch "^\.">
+    Deny from all
+</FilesMatch>
+
+# Evitar listado del directorio (opcional)
+Options -Indexes
+
+#############################################
+# FIN DE PROTECCIÓN
+#############################################

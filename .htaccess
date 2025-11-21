@@ -1,0 +1,46 @@
+# ACTIVAR REWRITE ENGINE
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    #############################################
+    # FORZAR HTTPS SOLO EN PRODUCCIÓN
+    #############################################
+    RewriteCond %{ENV:APP_ENV} =prod
+    RewriteCond %{HTTPS} !=on
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    #############################################
+    # PROTECCIÓN DE ARCHIVOS SENSIBLES
+    #############################################
+
+    # Proteger .env, claves, configuraciones
+    <FilesMatch "^(includes\.env|\.htaccess|composer\.json|composer\.lock|package\.json|webpack\.config\.js)$">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+
+    #############################################
+    # DESACTIVAR EXPLORACIÓN DE DIRECTORIOS
+    #############################################
+    Options -Indexes
+
+    #############################################
+    # BLOQUEO DE ATAQUES COMUNES
+    #############################################
+
+    # Bloquear inyecciones simples
+    RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} (\||\;|\$|\<|\>|%3C|%3E) [NC]
+    RewriteRule ^.*$ - [F]
+
+    # Bloquear bots dañinos conocidos
+    BrowserMatchNoCase "AhrefsBot" bad_bot
+    BrowserMatchNoCase "MJ12bot" bad_bot
+    BrowserMatchNoCase "DotBot" bad_bot
+
+    Order Allow,Deny
+    Allow from all
+    Deny from env=bad_bot
+
+    Require all denied
+</IfModule>

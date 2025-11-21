@@ -1,0 +1,29 @@
+#############################################
+# BLOQUEAR ACCESO COMPLETO A ESTA CARPETA
+#############################################
+
+# Bloquea todo acceso desde el navegador
+Order Allow,Deny
+Deny from all
+Allow from none
+
+# Evitar listado del directorio
+Options -Indexes
+
+# Deshabilitar ejecución de PHP dentro de esta carpeta
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+
+# Bloquear archivos ocultos y sensibles
+<FilesMatch "^\.">
+    Deny from all
+</FilesMatch>
+
+#############################################
+# FIN DE PROTECCIÓN
+#############################################
